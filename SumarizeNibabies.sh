@@ -25,20 +25,39 @@ fi
 
 # Scan nibabies directory for confounds files
 COUNTER=0
-for f in `ls -R $inpt_dir | grep confounds_timeseries.tsv` ; do
+fcmd="find ${f} -name \"*confounds_timeseries.tsv\" -print"
+echo "fcmd = $fcmd"
+#for f in `ls -R -d $inpt_dir | grep confounds_timeseries.tsv` ; do
+#for f in `$fcmd` ; do	
+for f in ` find ${inpt_dir} -iname "*confounds_timeseries.tsv" `  ; do
     let COUNTER=COUNTER+1
     echo "Processing $f"
 
-    #Decode Subject
+    # File decoders
+    # Decode Subject
     subj=`awk '{ sub(/.*sub-/, ""); sub(/_.*/, ""); print }' <<< $f `
-    #Decode Session
+    # Decode Session
     sess=`awk '{ sub(/.*ses-/, ""); sub(/_.*/, ""); print }' <<< $f `
-    #Decode Task
+    # Decode Task
     task=`awk '{ sub(/.*task-/, ""); sub(/_.*/, ""); print }' <<< $f `
-    #Decode Run
+    # Decode Run
     run=`awk '{ sub(/.*run-/, ""); sub(/_.*/, ""); print }' <<< $f `
 
     echo "Subject = $subj, Session = $sess, Task = $task, Run = $run"
+	
+
+	# For the columns we care about...
+	# FD "framewise_displacement"
+	col="framewise_displacement"
+	awk -v column_val="$col" '{ if (NR==1) {val=-1; for(i=1;i<=NF;i++) { if ($i == column_val) {val=i;}}} if(val != -1) print $val} ' $f  > file1.txt
+	fdavg=`awk '{s+=$1}END{print "ave:",s/NR}' RS="\n"  file1.txt`
+	echo "fdavg = $fdavg"
+	# "trans_x"
+	#col="trans_x"
+	#awk -v column_val="$col" '{ if (NR==1) {val=-1; for(i=1;i<=NF;i++) { if ($i == column_val) {val=i;}}} if(val != -1) print $val} ' $fp  > file2.txt
+	
+	
+	
 done
 
 # Display number of results proessed

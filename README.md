@@ -57,6 +57,7 @@ Example Script call:
 > \> SumarizeNibabies.sh ~/Data/Sohye/Infants/CHBabies/BB066_01/nibabies/ OutputFile.csv
 
 
+             
 
 
 
