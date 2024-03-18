@@ -23,6 +23,9 @@ else
     exit 20
 fi
 
+# Write output file header
+echo "Subject, Session, Task, Run, FD_AVG, FD_STD, XTrans_AVG, XTrans_STD, YTrans_AVG, YTrans_STD, ZTrans_AVG, ZTrans_STD" >> $outpt_file
+
 # Scan nibabies directory for confounds files
 COUNTER=0
 fcmd="find ${f} -name \"*confounds_timeseries.tsv\" -print"
@@ -49,18 +52,53 @@ for f in ` find ${inpt_dir} -iname "*confounds_timeseries.tsv" `  ; do
 	# FD "framewise_displacement"
 	col="framewise_displacement"
 	awk -v column_val="$col" '{ if (NR==1) {val=-1; for(i=1;i<=NF;i++) { if ($i == column_val) {val=i;}}} if(val != -1) print $val} ' $f  > file1.txt
-	fdavg=`awk 'NR>2 {s+=$1}END{print "ave:",s/(NR-2)}' RS="\n"  file1.txt`
-	echo "fdavg = $fdavg"
+	fdavg=`awk 'NR>2 {s+=$1}END{print s/(NR-2)}' RS="\n"  file1.txt`
+	#echo "fdavg = $fdavg"
 	fdstd=$(
 	    tail -n +3 file1.txt |
 	        awk 'NR>2 {sum+=$1; sumsq+=$1*$1}END{print sqrt(sumsq/(NR-1) - (sum/(NR-1))**2)}'
 	)
-	echo " FD std = $fdstd"
+	#echo " FD std = $fdstd"
+	rm file1.txt
+	
 	# "trans_x"
-	#col="trans_x"
-	#awk -v column_val="$col" '{ if (NR==1) {val=-1; for(i=1;i<=NF;i++) { if ($i == column_val) {val=i;}}} if(val != -1) print $val} ' $f  > file2.txt
+	col="trans_x"
+	awk -v column_val="$col" '{ if (NR==1) {val=-1; for(i=1;i<=NF;i++) { if ($i == column_val) {val=i;}}} if(val != -1) print $val} ' $f  > file1.txt
+	xtavg=`awk 'NR>2 {s+=$1}END{print s/(NR-2)}' RS="\n"  file1.txt`
+	#echo "fdavg = $fdavg"
+	xtstd=$(
+	    tail -n +3 file1.txt |
+	        awk 'NR>2 {sum+=$1; sumsq+=$1*$1}END{print sqrt(sumsq/(NR-1) - (sum/(NR-1))**2)}'
+	)
+	#echo " FD std = $fdstd"
+	rm file1.txt
 	
+	# "trans_y"
+	col="trans_y"
+	awk -v column_val="$col" '{ if (NR==1) {val=-1; for(i=1;i<=NF;i++) { if ($i == column_val) {val=i;}}} if(val != -1) print $val} ' $f  > file1.txt
+	ytavg=`awk 'NR>2 {s+=$1}END{print s/(NR-2)}' RS="\n"  file1.txt`
+	#echo "fdavg = $fdavg"
+	ytstd=$(
+	    tail -n +3 file1.txt |
+	        awk 'NR>2 {sum+=$1; sumsq+=$1*$1}END{print sqrt(sumsq/(NR-1) - (sum/(NR-1))**2)}'
+	)
+	#echo " FD std = $fdstd"
+	rm file1.txt
 	
+	# "trans_z"
+	col="trans_z"
+	awk -v column_val="$col" '{ if (NR==1) {val=-1; for(i=1;i<=NF;i++) { if ($i == column_val) {val=i;}}} if(val != -1) print $val} ' $f  > file1.txt
+	ztavg=`awk 'NR>2 {s+=$1}END{print s/(NR-2)}' RS="\n"  file1.txt`
+	#echo "fdavg = $fdavg"
+	ztstd=$(
+	    tail -n +3 file1.txt |
+	        awk 'NR>2 {sum+=$1; sumsq+=$1*$1}END{print sqrt(sumsq/(NR-1) - (sum/(NR-1))**2)}'
+	)
+	#echo " FD std = $fdstd"
+	rm file1.txt
+	
+	# Write output file
+	echo "$subj, $sess, $task, $run, $fdavg, $fdstd, $xtavg, $xtstd, $ytavg, $ytstd, $ztavg, $ztstd" >> $outpt_file
 	
 done
 
