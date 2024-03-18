@@ -26,8 +26,7 @@ fi
 # Scan nibabies directory for confounds files
 COUNTER=0
 fcmd="find ${f} -name \"*confounds_timeseries.tsv\" -print"
-echo "fcmd = $fcmd"
-#for f in `ls -R -d $inpt_dir | grep confounds_timeseries.tsv` ; do
+#echo "fcmd = $fcmd"
 #for f in `$fcmd` ; do	
 for f in ` find ${inpt_dir} -iname "*confounds_timeseries.tsv" `  ; do
     let COUNTER=COUNTER+1
@@ -50,11 +49,12 @@ for f in ` find ${inpt_dir} -iname "*confounds_timeseries.tsv" `  ; do
 	# FD "framewise_displacement"
 	col="framewise_displacement"
 	awk -v column_val="$col" '{ if (NR==1) {val=-1; for(i=1;i<=NF;i++) { if ($i == column_val) {val=i;}}} if(val != -1) print $val} ' $f  > file1.txt
-	fdavg=`awk '{s+=$1}END{print "ave:",s/NR}' RS="\n"  file1.txt`
+	#tail -n +3 file1.txt > file1a.txt
+	fdavg=`awk 'NR>2 {s+=$1}END{print "ave:",s/(NR-2)}' RS="\n"  file1.txt`
 	echo "fdavg = $fdavg"
 	# "trans_x"
 	#col="trans_x"
-	#awk -v column_val="$col" '{ if (NR==1) {val=-1; for(i=1;i<=NF;i++) { if ($i == column_val) {val=i;}}} if(val != -1) print $val} ' $fp  > file2.txt
+	#awk -v column_val="$col" '{ if (NR==1) {val=-1; for(i=1;i<=NF;i++) { if ($i == column_val) {val=i;}}} if(val != -1) print $val} ' $f  > file2.txt
 	
 	
 	
