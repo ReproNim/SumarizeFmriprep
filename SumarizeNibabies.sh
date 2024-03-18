@@ -49,9 +49,13 @@ for f in ` find ${inpt_dir} -iname "*confounds_timeseries.tsv" `  ; do
 	# FD "framewise_displacement"
 	col="framewise_displacement"
 	awk -v column_val="$col" '{ if (NR==1) {val=-1; for(i=1;i<=NF;i++) { if ($i == column_val) {val=i;}}} if(val != -1) print $val} ' $f  > file1.txt
-	#tail -n +3 file1.txt > file1a.txt
 	fdavg=`awk 'NR>2 {s+=$1}END{print "ave:",s/(NR-2)}' RS="\n"  file1.txt`
 	echo "fdavg = $fdavg"
+	fdstd=$(
+	    tail -n +3 file1.txt |
+	        awk 'NR>2 {sum+=$1; sumsq+=$1*$1}END{print sqrt(sumsq/(NR-1) - (sum/(NR-1))**2)}'
+	)
+	echo " FD std = $fdstd"
 	# "trans_x"
 	#col="trans_x"
 	#awk -v column_val="$col" '{ if (NR==1) {val=-1; for(i=1;i<=NF;i++) { if ($i == column_val) {val=i;}}} if(val != -1) print $val} ' $f  > file2.txt
