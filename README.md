@@ -45,19 +45,25 @@ While this *confound* file contains a large number of metrics, we have specific 
 # The Summariser Tool
 Given a pointer to a nibabies result directory, find each functional run, and create a table that aggregates the following content:
 
-| Subj    | Session | Task | Run | FD | trans_x |trans\_y | trans\_z | rot\_x | rot\_y | rot\_z | CSF | WM | Global | Outliers |
-| ------- | ------- | ----| ----| ----| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Subj    | Session | Task | Run | FD\_AVG | FD\_STD | trans\_x\_AVG | trans\_x\_STD | trans\_y\_AVG | trans\_y\_STD | trans\_z\_AVG | trans\_z\_STD | rot\_x\_AVG | rot\_x\_STD | rot\_y\_AVG | rot\_y\_STD |rot\_z\_AVG | rot\_z\_STD |  CSF | WM | Global | Outliers |
+| ------- | ------- | ----| ----| ----| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | BB06601 | 1       | rest | 02 |
 | BB06601 | 1       | rest | 03 |
 
 
+**Note:** We can debate if the STD values are useful or not...
 
-Example Script call:
+Example Script call (on DNK's system locally):
 
-> \> SumarizeNibabies.sh ~/Data/Sohye/Infants/CHBabies/BB066_01/nibabies/ OutputFile.csv
+> \> ./SumarizeNibabies.sh ~/Data/Sohye/Infants/CHBabies/BB066_01/nibabies/ ExampleOutput/OutputFile.csv
 
 
-             
+  
+See the example real output [here](ExampleOutput/OutputFile.csv).          
+
+
+**Still TODO: Outlier Count!**
+
 
 
 
