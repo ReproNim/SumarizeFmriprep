@@ -23,6 +23,14 @@ else
     exit 20
 fi
 
+# Check for nonexistance of output file
+if [ -f $outpt_file ]; then
+    echo 'Output file exists, let us stop'
+	exit 30
+else
+    echo 'Output filey does not exist, we can proceed without doing damage...'
+fi
+
 # Write output file header
 echo "Subject, Session, Task, Run, FD_AVG, FD_STD, XTrans_AVG, XTrans_STD, YTrans_AVG, YTrans_STD, ZTrans_AVG, ZTrans_STD, \
 	sXRot_AVG, XRot_STD, YRot_AVG, YRot_STD, ZRot_AVG, ZRot_STD, CSF_AVG, WhiteMatter_AVG, Global_AVG" >> $outpt_file
