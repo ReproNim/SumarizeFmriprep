@@ -64,6 +64,24 @@ See the example real output [here](ExampleOutput/OutputFile.csv).
 
 **Still TODO: Outlier Count!**
 
+The example file: /Users/kennedyd/Data/Sohye/Infants/CHBabies/BB066\_01/nibabies//sub-BB06601/ses\-1/func/sub\-BB06601\_ses\-1\_task-stories3\_run-06\_desc-confounds\_timeseries.tsv
+
+has the following outliers identified:
+> motion\_outlier00	motion\_outlier01	motion\_outlier02	motion\_outlier03	motion\_outlier04	motion\_outlier05	motion\_outlier06	motion\_outlier07
+
+We can get the complete header line with:
+
+> \> head -1 /Users/kennedyd/Data/Sohye/Infants/CHBabies/BB066_01/nibabies//sub-BB06601/ses-1/func/sub-BB06601_ses-1_task-stories3_run-06_desc-confounds_timeseries.tsv
+
+**IF** we assume that the motion\_outlier fields are last, and in numeric order, perhaps we can just extract the last two digits of the line... This is fragile (assums < 100, and that there is at least one outlier, for example as well as other things), so it really should be upgraded...
+
+But, we can put the headerline in a string:
+
+header=`head -1 $inpt_file`
+
+oct=${header: -2}
+
+
 
 
 

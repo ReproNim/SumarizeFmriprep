@@ -33,7 +33,7 @@ fi
 
 # Write output file header
 echo "Subject, Session, Task, Run, FD_AVG, FD_STD, XTrans_AVG, XTrans_STD, YTrans_AVG, YTrans_STD, ZTrans_AVG, ZTrans_STD, \
-	XRot_AVG, XRot_STD, YRot_AVG, YRot_STD, ZRot_AVG, ZRot_STD, CSF_AVG, WhiteMatter_AVG, Global_AVG" >> $outpt_file
+	XRot_AVG, XRot_STD, YRot_AVG, YRot_STD, ZRot_AVG, ZRot_STD, CSF_AVG, WhiteMatter_AVG, Global_AVG, Outliers" >> $outpt_file
 
 # Scan nibabies directory for confounds files
 COUNTER=0
@@ -56,7 +56,6 @@ for f in ` find ${inpt_dir} -iname "*confounds_timeseries.tsv" `  ; do
 
     echo "Subject = $subj, Session = $sess, Task = $task, Run = $run"
 	
-
 	# For the columns we care about...
 	# FD "framewise_displacement"
 	col="framewise_displacement"
@@ -178,9 +177,15 @@ for f in ` find ${inpt_dir} -iname "*confounds_timeseries.tsv" `  ; do
 	#echo " FD std = $fdstd"
 	rm file1.txt
 	
+	# Outlier Count
+	header=$(head -1 $f)
+	#echo "Header = $header"
+	oct=${header: -2}
+	#echo "Outlier Count = $oct"
+	
 	# Write output file
 	echo "$subj, $sess, $task, $run, $fdavg, $fdstd, $xtavg, $xtstd, $ytavg, $ytstd, $ztavg, $ztstd, \
-		$xravg, $xrstd, $yravg, $yrstd, $zravg, $zrstd, $csfavg, $wmavg, $gsavg" >> $outpt_file
+		$xravg, $xrstd, $yravg, $yrstd, $zravg, $zrstd, $csfavg, $wmavg, $gsavg, $oct" >> $outpt_file
 	
 done
 
