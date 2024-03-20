@@ -79,6 +79,8 @@ But, we can put the headerline in a string:
 
 header=`head -1 $inpt_file`
 
+and grab the last two digits:
+
 oct=${header: -2}
 
 
