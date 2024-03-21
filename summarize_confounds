@@ -1,0 +1,111 @@
+#!/usr/bin/env python3
+
+import sys
+import pathlib
+import argparse
+import csv
+import math
+import re
+
+VERSION = 0.1
+
+COLS_OF_INTEREST = [
+    'framewise_displacement', 
+    'trans_x', 
+    'trans_y', 
+    'trans_z', 
+    'rot_x', 
+    'rot_y', 
+    'rot_z', 
+    'csf', 
+    'white_matter', 
+    'global_signal'
+]
+
+re_groups = ['subject', 'session', 'task', 'run']
+fname_re = re.compile(r"""sub-([^_]+)_
+                          ses-(\d+)_
+                          task-([^_]+)_
+                          run-(\d+)_""", re.VERBOSE)
+
+def arg_directory(arg):
+    path = pathlib.Path(arg)
+    if not path.is_dir():
+        raise argparse.ArgumentTypeError(f'{arg}: not a directory')
+    return path
+
+def arg_noent(arg):
+    path = pathlib.Path(arg)
+    if path.exists():
+        raise argparse.ArgumentTypeError(f'{arg}: exists')
+    return path
+
+def read_confounds(path):
+    data = { key: [] for key in COLS_OF_INTEREST }
+    with open(path) as f:
+        reader = csv.DictReader(f, delimiter='\t')
+        for row_num, row in enumerate(reader):
+            for key in data:
+                val = row[key]
+                if key == 'framewise_displacement' and row_num == 0:
+                    assert val == 'n/a'
+                else:
+                    data[key].append(float(val))
+        n_motion_outliers = len(
+            [ k for k in row if k.startswith('motion_outlier') ]
+        )
+    summary = {}
+    for key in COLS_OF_INTEREST:
+        mean, std = stats(data[key])
+        summary[f'{key} mean'] = mean
+        summary[f'{key} std'] = std
+    summary['motion outliers'] = n_motion_outliers
+    return summary
+
+def stats(vals):
+    mean = sum(vals) / len(vals)
+    mean2 = mean * mean
+    vals2 = [ v*v for v in vals ]
+    std2 = (sum(vals2) - len(vals) * mean2) / (len(vals) - 1)
+    std = math.sqrt(std2)
+    return (mean, std)
+
+description = 'Summarize nibabies-reported confounds.'
+epilog = f'Version {VERSION}'
+parser = argparse.ArgumentParser(description=description, epilog=epilog)
+
+parser.add_argument('source_directory', type=arg_directory)
+parser.add_argument('output_file', type=arg_noent)
+
+args = parser.parse_args()
+
+print('finding confounds reports...')
+stack = [args.source_directory]
+data = []
+while stack:
+    path = stack.pop()
+    for subpath in path.iterdir():
+        if subpath.is_dir():
+            stack.append(subpath)
+        elif subpath.name.startswith('.'):
+            continue
+        elif subpath.name.endswith('confounds_timeseries.tsv'):
+            print(subpath.name)
+            c_sum = read_confounds(subpath)
+            m = fname_re.match(subpath.name)
+            c_sum.update(dict(zip(re_groups, m.groups())))
+            data.append(c_sum)
+
+print(f'writing {args.output_file.as_posix()}...')
+fields = list(re_groups)
+for col in COLS_OF_INTEREST:
+    fields.extend([f'{col} mean', f'{col} std'])
+fields.append('motion outliers')
+with open(args.output_file, 'w') as f:
+    writer = csv.DictWriter(f, fields)
+    writer.writeheader()
+    writer.writerows(data)
+
+sys.exit(0)
+
+# eof
