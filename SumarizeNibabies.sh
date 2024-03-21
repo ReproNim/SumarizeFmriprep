@@ -28,7 +28,7 @@ if [ -f $outpt_file ]; then
     echo 'Output file exists, let us stop'
 	exit 30
 else
-    echo 'Output filey does not exist, we can proceed without doing damage...'
+    echo 'Output file does not exist, we can proceed without doing damage...'
 fi
 
 # Write output file header

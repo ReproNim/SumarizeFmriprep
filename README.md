@@ -84,6 +84,10 @@ and grab the last two digits:
 oct=${header: -2}
 
 
+## The final (current) answer
+> \> ./SumarizeNibabies.sh /Volumes/PsychiatryNeuroinformatics\\$/Data/Sohye/Infants/nibabies/ ~/Projects/Sohye/Infants/nibabies\_results.csv
+
+
 
 
 
