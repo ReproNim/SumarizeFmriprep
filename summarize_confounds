@@ -23,10 +23,15 @@ COLS_OF_INTEREST = [
 ]
 
 re_groups = ['subject', 'session', 'task', 'run']
-fname_re = re.compile(r"""sub-([^_]+)_
-                          ses-(\d+)_
-                          task-([^_]+)_
-                          run-(\d+)_""", re.VERBOSE)
+#fname_re = re.compile(r"""sub-([^_]+)_
+#                        (ses-(\d+))?
+                          #ses-(\d+)*_
+#                          task-([^_]+)_
+#                          run-(\d+)_""", re.VERBOSE)
+                    
+fname_re = re.compile(r"""sub-(\d+)(?:_ses-(\d+))?_task-(\w+)_run-(\d+)""",re.VERBOSE)
+
+
 
 def arg_directory(arg):
     path = pathlib.Path(arg)
@@ -89,7 +94,7 @@ while stack:
             stack.append(subpath)
         elif subpath.name.startswith('.'):
             continue
-        elif subpath.name.endswith('confounds_timeseries.tsv'):
+        elif (subpath.name.endswith('confounds_timeseries.tsv')) or (subpath.name.endswith('confounds_regressors.tsv')):
             print(subpath.name)
             c_sum = read_confounds(subpath)
             m = fname_re.match(subpath.name)
