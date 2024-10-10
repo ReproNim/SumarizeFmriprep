@@ -22,7 +22,7 @@ COLS_OF_INTEREST = [
     'global_signal'
 ]
 
-re_groups = ['subject', 'session', 'task', 'run']
+re_groups = ['subject_id', 'ses', 'task', 'run']
 #fname_re = re.compile(r"""sub-([^_]+)_
 #                        (ses-(\d+))?
                           #ses-(\d+)*_
