@@ -118,7 +118,7 @@ for f in ` find ${inpt_dir} -iname "*confounds_timeseries.tsv" `  ; do
 	rm file1.txt
 	
 	# "rot_y"
-	col="trans_y"
+	col="rot_y"
 	awk -v column_val="$col" '{ if (NR==1) {val=-1; for(i=1;i<=NF;i++) { if ($i == column_val) {val=i;}}} if(val != -1) print $val} ' $f  > file1.txt
 	yravg=`awk 'NR>2 {s+=$1}END{print s/(NR-2)}' RS="\n"  file1.txt`
 	#echo "fdavg = $fdavg"
