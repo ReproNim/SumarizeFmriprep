@@ -190,7 +190,7 @@ for f in ` find ${inpt_dir} -iname "*confounds_timeseries.tsv" `  ; do
 done
 
 # Display number of results proessed
-echo "We pocessed $COUNTER files, hooray!"
+echo "We processed $COUNTER files, hooray!"
 
 
 
