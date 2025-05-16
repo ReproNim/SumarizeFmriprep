@@ -18,7 +18,7 @@ sub\-XXXX\_ses\-Y\_task\-{rest, other\_task\_name}\_run\-ZZ\_desc\-confounds\_ti
 (or specifically, for example:
 sub\-BB06601\_ses\-1\_task\-rest\_run\-02\_desc\-confounds\_timeseries.tsv)
 
-While this *confound* file contains a large number of metrics, we have specific interest in sumarising the following metrics:
+While this *confound* file contains a large number of metrics, we have specific interest in summarising the following metrics:
 
 * Estimated **head-motion parameters** - the 6 rigid-body motion parameters (3 translations and 3 rotation), estimated relative to a reference image: 
 
@@ -40,7 +40,7 @@ While this *confound* file contains a large number of metrics, we have specific 
 	
 	* global_signal - the average signal within the brain mask.
 
-* **Count of motion outliers** - Scans occuring at times of particularly high motion are flagged by the motion\_outlierXX column. For summary, we want the count of 'motion_outliers' (or equally, the largest XX).  
+* **Count of motion outliers** - Scans occurring at times of particularly high motion are flagged by the motion\_outlierXX column. For summary, we want the count of 'motion_outliers' (or equally, the largest XX).  
 
 ### The Summariser Tool
 Given a pointer to a nibabies result directory, find each functional run, and create a table that aggregates the following content:
