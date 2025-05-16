@@ -1,8 +1,8 @@
-# SumarizeNibabies
- A script to generate a session summary from a nibabies (fmriprep-babies) analysis
+# SumarizeFmriprep
+ A script to generate a session summary from a fmriprep (or fmriprep-babies) analysis
 
 
-## Canonical form of a *nibabies* output
+## Canonical form of a *fmriprep* output
 
 Documentation for nibabies output can be found [here](https://fmriprep.org/en/latest/outputs.html)
 
