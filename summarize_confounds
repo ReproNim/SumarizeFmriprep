@@ -19,7 +19,7 @@ COLS_OF_INTEREST = [
     'rot_z', 
     'csf', 
     'white_matter', 
-    'global_signal'
+    'global_signal',
 ]
 
 re_groups = ['subject_id', 'ses', 'task', 'run']
@@ -99,6 +99,7 @@ while stack:
             c_sum = read_confounds(subpath)
             m = fname_re.match(subpath.name)
             c_sum.update(dict(zip(re_groups, m.groups())))
+            c_sum['source_url'] = 'https://example.com/TODO'
             data.append(c_sum)
 
 print(f'writing {args.output_file.as_posix()}...')
@@ -106,6 +107,7 @@ fields = list(re_groups)
 for col in COLS_OF_INTEREST:
     fields.extend([f'{col} mean', f'{col} std'])
 fields.append('motion outliers')
+fields.append('source_url')
 with open(args.output_file, 'w') as f:
     writer = csv.DictWriter(f, fields)
     writer.writeheader()
