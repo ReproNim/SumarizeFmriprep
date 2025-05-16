@@ -92,7 +92,7 @@ while stack:
     for subpath in path.iterdir():
         if subpath.is_dir():
             stack.append(subpath)
-        elif subpath.name.startswith('.'):
+        elif subpath.name.startswith('.') or subpath.name in ['sourcedata', 'freesurfer']:
             continue
         elif (subpath.name.endswith('confounds_timeseries.tsv')) or (subpath.name.endswith('confounds_regressors.tsv')):
             print(subpath.name)
