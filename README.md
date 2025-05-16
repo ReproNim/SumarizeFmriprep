@@ -60,6 +60,7 @@ Example Script call (on DNK's system locally):
 
 # Usage
 ./summarize_confounds -h
+
 usage: summarize_confounds [-h] source_directory output_file
 
 Summarize nibabies-reported confounds.
