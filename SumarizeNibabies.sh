@@ -15,7 +15,7 @@ outpt_file=$2
 
 echo "Processing the $inpt_dir for nibabies summarization and writing the output to $outpt_file"
 
-# Check for existance of input directory
+# Check for existence of input directory
 if [ -d $inpt_dir ]; then
     echo 'Input Directory exists, let us forge ahead'
 else
@@ -23,7 +23,7 @@ else
     exit 20
 fi
 
-# Check for nonexistance of output file
+# Check for nonexistence of output file
 if [ -f $outpt_file ]; then
     echo 'Output file exists, let us stop'
 	exit 30
@@ -190,7 +190,7 @@ for f in ` find ${inpt_dir} -iname "*confounds_timeseries.tsv" `  ; do
 done
 
 # Display number of results proessed
-echo "We pocessed $COUNTER files, hooray!"
+echo "We processed $COUNTER files, hooray!"
 
 
 
