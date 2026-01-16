@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
+import os
 import pathlib
 import argparse
 import csv
@@ -23,13 +24,7 @@ COLS_OF_INTEREST = [
 ]
 
 re_groups = ['subject_id', 'ses', 'task', 'run']
-#fname_re = re.compile(r"""sub-([^_]+)_
-#                        (ses-(\d+))?
-                          #ses-(\d+)*_
-#                          task-([^_]+)_
-#                          run-(\d+)_""", re.VERBOSE)
-                    
-fname_re = re.compile(r"""sub-(\d+)(?:_ses-(\d+))?_task-(\w+)_run-(\d+)""",re.VERBOSE)
+fname_re = re.compile(r"""sub-(\w+)(_ses-\d+)?_task-(\w+)_run-(\d+)""")
 
 
 
@@ -75,6 +70,8 @@ def stats(vals):
     std = math.sqrt(std2)
     return (mean, std)
 
+progname = os.path.basename(sys.argv[0])
+
 description = 'Summarize nibabies-reported confounds.'
 epilog = f'Version {VERSION}'
 parser = argparse.ArgumentParser(description=description, epilog=epilog)
@@ -99,6 +96,12 @@ while stack:
             print(subpath.name)
             c_sum = read_confounds(subpath)
             m = fname_re.match(subpath.name)
+            if not m:
+                print(
+                    f'{progname}: unsupported filename: {subpath.name}', 
+                    file=sys.stderr
+                )
+                sys.exit(1)
             c_sum.update(dict(zip(re_groups, m.groups())))
             c_sum['source_url'] = 'https://example.com/TODO'
             data.append(c_sum)
