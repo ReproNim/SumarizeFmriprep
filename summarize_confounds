@@ -24,7 +24,13 @@ COLS_OF_INTEREST = [
 ]
 
 re_groups = ['subject_id', 'ses', 'task', 'run']
-fname_re = re.compile(r"""sub-(\w+)(_ses-\d+)?_task-(\w+)_run-(\d+)""")
+fname_re = re.compile(
+    r'sub-(?P<subject_id>[^_]+)'
+    r'(?:_ses-(?P<ses>[^_]+))?'
+    r'_task-(?P<task>[^_]+)'
+    r'(?:_(?!run-)[a-z]+-[^_]+)*'  # optional BIDS entities between task and run (acq, rec, dir, echo, space, ...)
+    r'(?:_run-(?P<run>[^_]+))?'
+)
 
 
 
@@ -102,7 +108,7 @@ while stack:
                     file=sys.stderr
                 )
                 sys.exit(1)
-            c_sum.update(dict(zip(re_groups, m.groups())))
+            c_sum.update({k: m.groupdict().get(k) for k in re_groups})
             c_sum['source_url'] = 'https://example.com/TODO'
             data.append(c_sum)
 
